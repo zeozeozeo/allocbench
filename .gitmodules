@@ -1,0 +1,12 @@
+[submodule "deps/rpmalloc"]
+	path = deps/rpmalloc
+	url = https://github.com/mjansson/rpmalloc
+[submodule "deps/jemalloc"]
+	path = deps/jemalloc
+	url = https://github.com/jemalloc/jemalloc
+[submodule "deps/tcmalloc-cmake"]
+	path = deps/tcmalloc-cmake
+	url = https://github.com/ObiWahn/tcmalloc-cmake
+[submodule "deps/mimalloc"]
+	path = deps/mimalloc
+	url = https://github.com/microsoft/mimalloc
