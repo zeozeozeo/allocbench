@@ -50,17 +50,17 @@ void timer_start(void) {
 }
 
 static double timespec_diff_ms(struct timespec* start, struct timespec* end) {
-    return (end->tv_sec - start->tv_sec) * 1000.0 + 
+    return (end->tv_sec - start->tv_sec) * 1000.0 +
            (end->tv_nsec - start->tv_nsec) / 1000000.0;
 }
 
 static double timespec_diff_us(struct timespec* start, struct timespec* end) {
-    return (end->tv_sec - start->tv_sec) * 1000000.0 + 
+    return (end->tv_sec - start->tv_sec) * 1000000.0 +
            (end->tv_nsec - start->tv_nsec) / 1000.0;
 }
 
 static double timespec_diff_ns(struct timespec* start, struct timespec* end) {
-    return (end->tv_sec - start->tv_sec) * 1000000000.0 + 
+    return (end->tv_sec - start->tv_sec) * 1000000000.0 +
            (end->tv_nsec - start->tv_nsec);
 }
 

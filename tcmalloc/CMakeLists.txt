@@ -1,0 +1,104 @@
+cmake_minimum_required(VERSION 3.25)
+project(tcmalloc-cmake VERSION 0.0.1 LANGUAGES CXX)
+
+if(TARGET tcmalloc OR TARGET tcmalloc::tcmalloc)
+    return()
+endif()
+
+## configuration
+
+set(TCMALLOC_SYSTEM "suppress warnings from this lib when included" ON)
+set(TCMALLOC_PROTO "build with protobuf support" ON)
+set(TCMALLOC_TEST "build tests" ON)
+
+
+## dependency resolution
+include(FetchContent)
+
+FetchContent_Declare(
+    abseil
+    GIT_REPOSITORY   https://github.com/abseil/abseil-cpp.git
+    GIT_TAG          255c84dadd029fd8ad25c5efb5933e47beaa00c7  # 20260107.1
+    OVERRIDE_FIND_PACKAGE
+)
+
+FetchContent_Declare(
+    googletest
+    GIT_REPOSITORY https://github.com/google/googletest.git
+    GIT_TAG        52eb8108c5bdec04579160ae17225d66034bd723  # v1.17.0
+    OVERRIDE_FIND_PACKAGE
+)
+
+FetchContent_Declare(
+    benchmark
+    GIT_REPOSITORY https://github.com/google/benchmark.git
+    GIT_TAG        192ef10025eb2c4cdd392bc502f0c852196baa48  # v1.9.5
+    OVERRIDE_FIND_PACKAGE
+)
+
+# TODO: fetch protobuf and protoc
+set(__tcmalloc_proto OFF)
+
+if(NOT TARGET absl::base)
+    set(ABSL_PROPAGATE_CXX_STD ON)
+    find_package(abseil)
+endif()
+
+# TODO: enable tests
+# Are tests dependend on protobuf?
+if (TCMALLOC_TEST)
+    if(NOT TARGET googletest)
+        find_package(googletest)
+    endif()
+
+    if(TARGET googletest)
+        if(NOT TARGET benchmark)
+            find_package(benchmark)
+        endif()
+    endif()
+
+    if(TARGET googletest) # AND TARGET benchmark AND TARGET gmock -- ಠ_ಠ
+        if(TARGET benchmark)
+            if(TARGET gmock)
+                set(__tcmalloc_test ON)
+            endif()
+        endif()
+    endif()
+endif()
+
+## adding tcmalloc sub_directory
+if(TCMALLOC_SYSTEM)
+    set(__tcmalloc_system SYSTEM)
+endif()
+
+if (NOT TCMALLOC_SOURCE_DIR)
+    set(TCMALLOC_SOURCE_DIR ${CMAKE_CURRENT_LIST_DIR}/tcmalloc CACHE FILEPATH "local directory that contains tcmalloc")
+endif()
+
+if (EXISTS ${TCMALLOC_SOURCE_DIR})
+    file(COPY ${CMAKE_SOURCE_DIR}/tcmalloc/tcmalloc.cmake DESTINATION ${TCMALLOC_SOURCE_DIR})
+    file(COPY ${CMAKE_SOURCE_DIR}/tcmalloc_files.cmake DESTINATION ${TCMALLOC_SOURCE_DIR})
+    file(COPY ${CMAKE_SOURCE_DIR}/tcmalloc/tc_wrappers.cc DESTINATION ${TCMALLOC_SOURCE_DIR}/tcmalloc)
+    file(RENAME ${TCMALLOC_SOURCE_DIR}/tcmalloc.cmake ${TCMALLOC_SOURCE_DIR}/CMakeLists.txt)
+
+    add_subdirectory(${TCMALLOC_SOURCE_DIR} ${TCMALLOC_BINARY_DIR} ${__tcmalloc_system})
+else()
+    FetchContent_Declare(
+        tcmalloc-git
+        GIT_REPOSITORY   https://github.com/google/tcmalloc.git
+        GIT_TAG          68a6c8072fddfc1f4d5fc3f75ee3edba894a8228
+    )
+
+    FetchContent_GetProperties(absl-git)
+    FetchContent_GetProperties(tcmalloc-git)
+    if(NOT tcmalloc-git_POPULATED)
+        FetchContent_Populate(tcmalloc-git)
+    endif()
+
+    file(COPY ${CMAKE_SOURCE_DIR}/tcmalloc/tcmalloc.cmake DESTINATION ${tcmalloc-git_SOURCE_DIR})
+    file(COPY ${CMAKE_SOURCE_DIR}/tcmalloc_files.cmake DESTINATION ${tcmalloc-git_SOURCE_DIR})
+    file(COPY ${CMAKE_SOURCE_DIR}/tcmalloc/tc_wrappers.cc DESTINATION ${tcmalloc-git_SOURCE_DIR}/tcmalloc)
+    file(RENAME ${tcmalloc-git_SOURCE_DIR}/tcmalloc.cmake ${tcmalloc-git_SOURCE_DIR}/CMakeLists.txt)
+
+    add_subdirectory(${tcmalloc-git_SOURCE_DIR} ${tcmalloc-git_BINARY_DIR} ${__tcmalloc_system})
+endif()

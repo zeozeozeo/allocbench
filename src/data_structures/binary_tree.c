@@ -2,7 +2,7 @@
 
 int binary_tree_init(binary_tree_t* tree, compare_func_t compare, allocator_api_t* allocator) {
     if (!tree || !compare || !allocator) return -1;
-    
+
     tree->root = NULL;
     tree->size = 0;
     tree->compare = compare;
@@ -26,29 +26,29 @@ void binary_tree_destroy(binary_tree_t* tree) {
 
 binary_tree_node_t* binary_tree_insert(binary_tree_t* tree, void* key, void* value) {
     if (!tree) return NULL;
-    
+
     binary_tree_node_t* node = tree->allocator->malloc(sizeof(binary_tree_node_t));
     if (!node) return NULL;
-    
+
     node->key = key;
     node->value = value;
     node->left = NULL;
     node->right = NULL;
     node->parent = NULL;
-    
+
     if (!tree->root) {
         tree->root = node;
         tree->size++;
         return node;
     }
-    
+
     binary_tree_node_t* current = tree->root;
     binary_tree_node_t* parent = NULL;
-    
+
     while (current) {
         parent = current;
         int cmp = tree->compare(key, current->key);
-        
+
         if (cmp < 0) {
             current = current->left;
         } else if (cmp > 0) {
@@ -59,25 +59,25 @@ binary_tree_node_t* binary_tree_insert(binary_tree_t* tree, void* key, void* val
             return current;
         }
     }
-    
+
     node->parent = parent;
     if (tree->compare(key, parent->key) < 0) {
         parent->left = node;
     } else {
         parent->right = node;
     }
-    
+
     tree->size++;
     return node;
 }
 
 binary_tree_node_t* binary_tree_find(binary_tree_t* tree, const void* key) {
     if (!tree) return NULL;
-    
+
     binary_tree_node_t* current = tree->root;
     while (current) {
         int cmp = tree->compare(key, current->key);
-        
+
         if (cmp < 0) {
             current = current->left;
         } else if (cmp > 0) {
@@ -86,7 +86,7 @@ binary_tree_node_t* binary_tree_find(binary_tree_t* tree, const void* key) {
             return current;
         }
     }
-    
+
     return NULL;
 }
 
@@ -119,33 +119,33 @@ binary_tree_node_t* binary_tree_max(binary_tree_t* tree) {
 
 binary_tree_node_t* binary_tree_successor(binary_tree_node_t* node) {
     if (!node) return NULL;
-    
+
     if (node->right) {
         return find_min(node->right);
     }
-    
+
     binary_tree_node_t* parent = node->parent;
     while (parent && node == parent->right) {
         node = parent;
         parent = parent->parent;
     }
-    
+
     return parent;
 }
 
 binary_tree_node_t* binary_tree_predecessor(binary_tree_node_t* node) {
     if (!node) return NULL;
-    
+
     if (node->left) {
         return find_max(node->left);
     }
-    
+
     binary_tree_node_t* parent = node->parent;
     while (parent && node == parent->left) {
         node = parent;
         parent = parent->parent;
     }
-    
+
     return parent;
 }
 
@@ -157,7 +157,7 @@ static void transplant(binary_tree_t* tree, binary_tree_node_t* u, binary_tree_n
     } else {
         u->parent->right = v;
     }
-    
+
     if (v) {
         v->parent = u->parent;
     }
@@ -165,30 +165,30 @@ static void transplant(binary_tree_t* tree, binary_tree_node_t* u, binary_tree_n
 
 void* binary_tree_remove(binary_tree_t* tree, void* key) {
     if (!tree) return NULL;
-    
+
     binary_tree_node_t* node = binary_tree_find(tree, key);
     if (!node) return NULL;
-    
+
     void* value = node->value;
-    
+
     if (!node->left) {
         transplant(tree, node, node->right);
     } else if (!node->right) {
         transplant(tree, node, node->left);
     } else {
         binary_tree_node_t* successor = find_min(node->right);
-        
+
         if (successor->parent != node) {
             transplant(tree, successor, successor->right);
             successor->right = node->right;
             successor->right->parent = successor;
         }
-        
+
         transplant(tree, node, successor);
         successor->left = node->left;
         successor->left->parent = successor;
     }
-    
+
     tree->allocator->free(node);
     tree->size--;
     return value;
@@ -200,10 +200,10 @@ size_t binary_tree_size(const binary_tree_t* tree) {
 
 static size_t node_height(const binary_tree_node_t* node) {
     if (!node) return 0;
-    
+
     size_t left_height = node_height(node->left);
     size_t right_height = node_height(node->right);
-    
+
     return 1 + (left_height > right_height ? left_height : right_height);
 }
 

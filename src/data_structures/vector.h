@@ -12,7 +12,7 @@ typedef struct {
     allocator_api_t* allocator;
 } vector_t;
 
-int vector_init(vector_t* vec, size_t element_size, size_t initial_capacity, 
+int vector_init(vector_t* vec, size_t element_size, size_t initial_capacity,
                 allocator_api_t* allocator);
 void vector_destroy(vector_t* vec);
 int vector_push_back(vector_t* vec, const void* element);

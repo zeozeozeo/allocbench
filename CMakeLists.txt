@@ -3,6 +3,7 @@ project(allocbench C)
 
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD_REQUIRED ON)
+include(FetchContent)
 
 if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Release)
@@ -81,10 +82,10 @@ if(BUILD_WITH_JEMALLOC AND NOT WIN32)
     set(JEMALLOC_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/deps/jemalloc)
     set(JEMALLOC_BUILD_DIR ${CMAKE_CURRENT_BINARY_DIR}/jemalloc_build)
     set(JEMALLOC_STATIC_LIB ${JEMALLOC_BUILD_DIR}/lib/libjemalloc.a)
-    
+
     ExternalProject_Add(jemalloc_external
         SOURCE_DIR ${JEMALLOC_SOURCE_DIR}
-        CONFIGURE_COMMAND ${JEMALLOC_SOURCE_DIR}/autogen.sh 
+        CONFIGURE_COMMAND ${JEMALLOC_SOURCE_DIR}/autogen.sh
             --prefix=${JEMALLOC_BUILD_DIR}
             --disable-shared
             --enable-static
@@ -94,28 +95,26 @@ if(BUILD_WITH_JEMALLOC AND NOT WIN32)
         INSTALL_COMMAND make install
         BUILD_BYPRODUCTS ${JEMALLOC_STATIC_LIB}
     )
-    
+
     add_library(jemalloc STATIC IMPORTED GLOBAL)
     set_property(TARGET jemalloc PROPERTY IMPORTED_LOCATION ${JEMALLOC_STATIC_LIB})
-    target_include_directories(jemalloc INTERFACE ${JEMALLOC_BUILD_DIR}/include)
+    target_include_directories(jemalloc INTERFACE ${JEMALLOC_SOURCE_DIR}/include)
     add_dependencies(jemalloc jemalloc_external)
-    
+
     target_compile_definitions(allocbench_core PUBLIC HAVE_JEMALLOC=1)
     target_link_libraries(allocbench_core PUBLIC jemalloc pthread dl)
     message(STATUS "Building with jemalloc")
 endif()
 
 if(BUILD_WITH_TCMALLOC)
-    set(TCMALLOC_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/deps/tcmalloc-cmake)
-    
+
     FetchContent_Declare(abseil_cpp
         GIT_REPOSITORY https://github.com/abseil/abseil-cpp.git
-        GIT_TAG 20240116.1
     )
     set(ABSL_PROPAGATE_CXX_STD ON CACHE BOOL "" FORCE)
     FetchContent_MakeAvailable(abseil_cpp)
-    
-    include(${TCMALLOC_SOURCE_DIR}/tcmalloc.cmake)
+
+    include(tcmalloc/CMakeLists.txt)
     target_compile_definitions(allocbench_core PUBLIC HAVE_TCMALLOC=1)
     target_link_libraries(allocbench_core PUBLIC tcmalloc)
     message(STATUS "Building with tcmalloc")

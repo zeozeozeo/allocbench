@@ -60,7 +60,7 @@ int benchmark_get_count(void);
 benchmark_t* benchmark_get(int index);
 
 int benchmark_run_all(const char* output_dir);
-int benchmark_run_single(const char* allocator_name, const char* benchmark_name, 
+int benchmark_run_single(const char* allocator_name, const char* benchmark_name,
                          benchmark_result_t* result);
 void benchmark_print_result(const char* benchmark_name, const char* allocator_name,
                            const benchmark_result_t* result);

@@ -27,7 +27,7 @@ typedef struct {
 
 int hash_table_init(hash_table_t* table, hash_func_t hash, key_equal_func_t key_equal,
                     allocator_api_t* allocator);
-int hash_table_init_with_capacity(hash_table_t* table, hash_func_t hash, 
+int hash_table_init_with_capacity(hash_table_t* table, hash_func_t hash,
                                    key_equal_func_t key_equal, size_t capacity,
                                    allocator_api_t* allocator);
 void hash_table_destroy(hash_table_t* table);

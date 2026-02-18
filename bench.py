@@ -122,7 +122,7 @@ def generate_benchmark_tables(data: dict) -> str:
 
     if overall_wins:
         overall_winner = max(overall_wins.keys(), key=lambda x: overall_wins[x])
-        md += "### Overall Summary\n\n"
+        md += "### Overall summary\n\n"
         md += f"**Overall Winner: {overall_winner}** (won {overall_wins[overall_winner]} benchmarks)\n\n"
         wins_list = sorted(overall_wins.items(), key=lambda x: x[1], reverse=True)
         md += "| Allocator | Wins |\n|-----------|------|\n"
