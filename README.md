@@ -315,3 +315,10 @@ jemalloc, mimalloc, rpmalloc, system
 **Best performer:** total_ops_per_sec: mimalloc, alloc_ops_per_sec: mimalloc
 
 </details>
+
+In conclusion, mimalloc is the clear winner on both Linux and Windows.
+
+Linux kernel used:
+- 6.18.9-arch1-2
+- SLUB allocator
+- EEVDF sched
