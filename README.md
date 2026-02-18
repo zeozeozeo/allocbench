@@ -316,7 +316,7 @@ jemalloc, mimalloc, rpmalloc, system
 
 </details>
 
-In conclusion, mimalloc is the clear winner on both Linux and Windows.
+In conclusion, mimalloc is the clear winner on both Linux and Windows. All allocators were compiled with clang 21 -O3.
 
 Linux kernel used:
 - 6.18.9-arch1-2
