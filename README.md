@@ -6,7 +6,291 @@ Benchmarks of various memory allocation libraries: [mimalloc](https://github.com
 
 <details>
 <summary>Windows (Xeon 10c/20t, DDR4-2133 quad)</summary>
-# todo
+
+## Benchmark results (windows)
+
+## Tested allocators
+
+mimalloc, rpmalloc, system
+
+## Results
+
+### aligned_alloc
+
+| Allocator | Total ops/s | Alloc ops/s | Free ops/s | Avg time (ns) | P50 (ns) | P99 (ns) | Peak RSS |
+|-----------|-------------|-------------|------------|---------------|----------|----------|----------|
+| rpmalloc **(Winner)** | 2.19M | 2.19M | 0.00 | 455.74ns | 78.00ns | 4.04Kns | 10.50 MB |
+| system | 440.96K | 440.96K | 0.00 | 2.27Kns | 208.00ns | 73.99Kns | 68.00 KB |
+| mimalloc | 388.90K | 388.90K | 0.00 | 2.57Kns | 100.00ns | 19.87Kns | 110.50 MB |
+
+### alloc_free_immediate
+
+| Allocator | Total ops/s | Alloc ops/s | Free ops/s | Avg time (ns) | P50 (ns) | P99 (ns) | Peak RSS |
+|-----------|-------------|-------------|------------|---------------|----------|----------|----------|
+| rpmalloc **(Winner)** | 26.49M | 0.00 | 0.00 | 37.75ns | N/A | N/A | 0 |
+| mimalloc | 12.48M | 0.00 | 0.00 | 80.16ns | N/A | N/A | 0 |
+| system | 5.17M | 0.00 | 0.00 | 193.49ns | N/A | N/A | 0 |
+
+### binary_tree_ops
+
+| Allocator | Total ops/s | Alloc ops/s | Free ops/s | Avg time (ns) | P50 (ns) | P99 (ns) | Peak RSS |
+|-----------|-------------|-------------|------------|---------------|----------|----------|----------|
+| mimalloc **(Winner)** | 783.37K | 823.15K | 747.26K | 1.21Kns | N/A | N/A | 7.71 MB |
+| rpmalloc | 747.31K | 790.40K | 708.68K | 1.27Kns | N/A | N/A | 72.00 KB |
+| system | 669.72K | 695.17K | 646.06K | 1.44Kns | N/A | N/A | 116.00 KB |
+
+### fragmentation_pattern
+
+| Allocator | Total ops/s | Alloc ops/s | Free ops/s | Avg time (ns) | P50 (ns) | P99 (ns) | Peak RSS |
+|-----------|-------------|-------------|------------|---------------|----------|----------|----------|
+| mimalloc **(Winner)** | 5.12M | 0.00 | 0.00 | 195.19ns | N/A | N/A | 27.05 MB |
+| rpmalloc | 5.08M | 0.00 | 0.00 | 196.82ns | N/A | N/A | 136.00 KB |
+| system | 3.06M | 0.00 | 0.00 | 326.78ns | N/A | N/A | 219.32 MB |
+
+### hash_table_ops
+
+| Allocator | Total ops/s | Alloc ops/s | Free ops/s | Avg time (ns) | P50 (ns) | P99 (ns) | Peak RSS |
+|-----------|-------------|-------------|------------|---------------|----------|----------|----------|
+| mimalloc **(Winner)** | 4.23M | 2.58M | 0.00 | 387.13ns | N/A | N/A | 17.99 MB |
+| rpmalloc | 3.43M | 2.15M | 0.00 | 465.02ns | N/A | N/A | 3.88 MB |
+| system | 2.79M | 1.65M | 0.00 | 607.29ns | N/A | N/A | 30.89 MB |
+
+### larson
+
+| Allocator | Total ops/s | Alloc ops/s | Free ops/s | Avg time (ns) | P50 (ns) | P99 (ns) | Peak RSS |
+|-----------|-------------|-------------|------------|---------------|----------|----------|----------|
+| mimalloc **(Winner)** | 21.49M | 10.75M | 10.74M | 46.54ns | N/A | N/A | 0 |
+| rpmalloc | 20.79M | 10.40M | 10.39M | 48.11ns | N/A | N/A | 2.35 MB |
+| system | 6.10M | 3.05M | 3.05M | 164.04ns | N/A | N/A | 680.00 KB |
+
+### linked_list_ops
+
+| Allocator | Total ops/s | Alloc ops/s | Free ops/s | Avg time (ns) | P50 (ns) | P99 (ns) | Peak RSS |
+|-----------|-------------|-------------|------------|---------------|----------|----------|----------|
+| mimalloc **(Winner)** | 24.76M | 19.57M | 33.69M | 51.10ns | N/A | N/A | 0 |
+| rpmalloc | 20.98M | 14.33M | 39.20M | 69.79ns | N/A | N/A | 824.00 KB |
+| system | 8.01M | 6.73M | 9.89M | 148.60ns | N/A | N/A | 0 |
+
+### random_alloc
+
+| Allocator | Total ops/s | Alloc ops/s | Free ops/s | Avg time (ns) | P50 (ns) | P99 (ns) | Peak RSS |
+|-----------|-------------|-------------|------------|---------------|----------|----------|----------|
+| mimalloc **(Winner)** | 3.34M | 2.57M | 5.56M | 389.39ns | 86.00ns | 9.71Kns | 66.77 MB |
+| rpmalloc | 2.69M | 5.46M | 1.61M | 183.27ns | 52.00ns | 4.16Kns | 820.00 KB |
+| system | 1.63M | 1.36M | 2.23M | 737.48ns | 218.00ns | 732.00ns | 0 |
+
+### realloc
+
+| Allocator | Total ops/s | Alloc ops/s | Free ops/s | Avg time (ns) | P50 (ns) | P99 (ns) | Peak RSS |
+|-----------|-------------|-------------|------------|---------------|----------|----------|----------|
+| rpmalloc **(Winner)** | 28.19M | 28.19M | 28.19M | 35.47ns | 24.00ns | 60.00ns | 0 |
+| mimalloc | 4.01M | 4.01M | 4.01M | 249.19ns | 130.00ns | 412.00ns | 0 |
+| system | 1.39M | 1.39M | 1.39M | 720.83ns | 562.00ns | 1.80Kns | 864.00 KB |
+
+### sequential_alloc
+
+| Allocator | Total ops/s | Alloc ops/s | Free ops/s | Avg time (ns) | P50 (ns) | P99 (ns) | Peak RSS |
+|-----------|-------------|-------------|------------|---------------|----------|----------|----------|
+| mimalloc **(Winner)** | 723.41K | 476.42K | 1.50M | 2.10Kns | 62.00ns | 18.46Kns | 346.36 MB |
+| system | 700.41K | 596.03K | 849.10K | 1.68Kns | 160.00ns | 6.60Kns | 7.87 MB |
+| rpmalloc | 671.32K | 1.43M | 439.04K | 701.47ns | 40.00ns | 6.84Kns | 138.18 MB |
+
+### stack_ops
+
+| Allocator | Total ops/s | Alloc ops/s | Free ops/s | Avg time (ns) | P50 (ns) | P99 (ns) | Peak RSS |
+|-----------|-------------|-------------|------------|---------------|----------|----------|----------|
+| rpmalloc **(Winner)** | 37.24M | 34.68M | 40.20M | 28.83ns | N/A | N/A | 0 |
+| mimalloc | 32.42M | 29.34M | 36.23M | 34.08ns | N/A | N/A | 0 |
+| system | 8.35M | 8.14M | 8.57M | 122.91ns | N/A | N/A | 0 |
+
+### threaded_alloc_1
+
+| Allocator | Total ops/s | Alloc ops/s | Free ops/s | Avg time (ns) | P50 (ns) | P99 (ns) | Peak RSS |
+|-----------|-------------|-------------|------------|---------------|----------|----------|----------|
+| mimalloc **(Winner)** | 1.26M | 628.89K | 628.89K | 757.16ns | N/A | N/A | 120.43 MB |
+| system | 966.72K | 483.36K | 483.36K | 960.62ns | N/A | N/A | 0 |
+| rpmalloc | 690.86K | 345.43K | 345.43K | 1.39Kns | N/A | N/A | 16.82 MB |
+
+### threaded_alloc_16
+
+| Allocator | Total ops/s | Alloc ops/s | Free ops/s | Avg time (ns) | P50 (ns) | P99 (ns) | Peak RSS |
+|-----------|-------------|-------------|------------|---------------|----------|----------|----------|
+| mimalloc **(Winner)** | 4.47M | 2.24M | 2.24M | 3.43Kns | N/A | N/A | 233.43 MB |
+| system | 2.82M | 1.41M | 1.41M | 3.70Kns | N/A | N/A | 0 |
+| rpmalloc | 2.75M | 1.37M | 1.37M | 5.37Kns | N/A | N/A | 19.91 MB |
+
+### threaded_alloc_2
+
+| Allocator | Total ops/s | Alloc ops/s | Free ops/s | Avg time (ns) | P50 (ns) | P99 (ns) | Peak RSS |
+|-----------|-------------|-------------|------------|---------------|----------|----------|----------|
+| system **(Winner)** | 4.74M | 2.37M | 2.37M | 360.83ns | N/A | N/A | 206.45 MB |
+| mimalloc | 3.39M | 1.70M | 1.70M | 513.38ns | N/A | N/A | 255.02 MB |
+| rpmalloc | 1.04M | 518.97K | 518.97K | 1.86Kns | N/A | N/A | 8.98 MB |
+
+### threaded_alloc_4
+
+| Allocator | Total ops/s | Alloc ops/s | Free ops/s | Avg time (ns) | P50 (ns) | P99 (ns) | Peak RSS |
+|-----------|-------------|-------------|------------|---------------|----------|----------|----------|
+| mimalloc **(Winner)** | 7.10M | 3.55M | 3.55M | 515.21ns | N/A | N/A | 255.03 MB |
+| system | 6.29M | 3.14M | 3.14M | 505.81ns | N/A | N/A | 5.87 MB |
+| rpmalloc | 1.59M | 793.83K | 793.83K | 2.43Kns | N/A | N/A | 12.12 MB |
+
+### threaded_alloc_8
+
+| Allocator | Total ops/s | Alloc ops/s | Free ops/s | Avg time (ns) | P50 (ns) | P99 (ns) | Peak RSS |
+|-----------|-------------|-------------|------------|---------------|----------|----------|----------|
+| mimalloc **(Winner)** | 5.66M | 2.83M | 2.83M | 1.33Kns | N/A | N/A | 253.79 MB |
+| system | 3.85M | 1.93M | 1.93M | 1.63Kns | N/A | N/A | 768.00 KB |
+| rpmalloc | 2.29M | 1.15M | 1.15M | 3.36Kns | N/A | N/A | 18.80 MB |
+
+### vector_ops
+
+| Allocator | Total ops/s | Alloc ops/s | Free ops/s | Avg time (ns) | P50 (ns) | P99 (ns) | Peak RSS |
+|-----------|-------------|-------------|------------|---------------|----------|----------|----------|
+| rpmalloc **(Winner)** | 38.37M | 35.01M | 42.45M | 28.57ns | N/A | N/A | 3.98 MB |
+| mimalloc | 38.35M | 34.94M | 42.51M | 28.62ns | N/A | N/A | 7.93 MB |
+| system | 37.67M | 33.94M | 42.31M | 29.47ns | N/A | N/A | 952.00 KB |
+
+### worst_case_frag
+
+| Allocator | Total ops/s | Alloc ops/s | Free ops/s | Avg time (ns) | P50 (ns) | P99 (ns) | Peak RSS |
+|-----------|-------------|-------------|------------|---------------|----------|----------|----------|
+| system **(Winner)** | 8.78M | 0.00 | 0.00 | 113.92ns | N/A | N/A | 64.00 KB |
+| mimalloc | 3.06M | 0.00 | 0.00 | 326.27ns | N/A | N/A | 0 |
+| rpmalloc | 3.00M | 0.00 | 0.00 | 333.40ns | N/A | N/A | 492.00 KB |
+
+### Overall Summary
+
+**Overall Winner: mimalloc** (won 11 benchmarks)
+
+| Allocator | Wins |
+|-----------|------|
+| mimalloc | 11 |
+| rpmalloc | 5 |
+| system | 2 |
+
+## Thread scaling
+
+| Threads | mimalloc | rpmalloc | system | Best |
+|---------|--------|--------|--------|--------|
+| 1 | 1.26M ** | 690.86K | 966.72K | mimalloc |
+| 2 | 3.39M | 1.04M | 4.74M ** | system |
+| 4 | 7.10M ** | 1.59M | 6.29M | mimalloc |
+| 8 | 5.66M ** | 2.29M | 3.85M | mimalloc |
+| 16 | 4.47M ** | 2.75M | 2.82M | mimalloc |
+
+![Thread Scaling](plots/windows/thread_scaling.png)
+
+## Performance plots
+
+### aligned_alloc
+
+![aligned_alloc](plots/windows/aligned_alloc.png)
+
+**Best performer:** total_ops_per_sec: rpmalloc, alloc_ops_per_sec: rpmalloc
+
+### alloc_free_immediate
+
+![alloc_free_immediate](plots/windows/alloc_free_immediate.png)
+
+**Best performer:** total_ops_per_sec: rpmalloc, alloc_ops_per_sec: system
+
+### binary_tree_ops
+
+![binary_tree_ops](plots/windows/binary_tree_ops.png)
+
+**Best performer:** total_ops_per_sec: mimalloc, alloc_ops_per_sec: mimalloc
+
+### fragmentation_pattern
+
+![fragmentation_pattern](plots/windows/fragmentation_pattern.png)
+
+**Best performer:** total_ops_per_sec: mimalloc, alloc_ops_per_sec: mimalloc
+
+### hash_table_ops
+
+![hash_table_ops](plots/windows/hash_table_ops.png)
+
+**Best performer:** total_ops_per_sec: mimalloc, alloc_ops_per_sec: mimalloc
+
+### larson
+
+![larson](plots/windows/larson.png)
+
+**Best performer:** total_ops_per_sec: mimalloc, alloc_ops_per_sec: mimalloc
+
+### linked_list_ops
+
+![linked_list_ops](plots/windows/linked_list_ops.png)
+
+**Best performer:** total_ops_per_sec: mimalloc, alloc_ops_per_sec: mimalloc
+
+### random_alloc
+
+![random_alloc](plots/windows/random_alloc.png)
+
+**Best performer:** total_ops_per_sec: mimalloc, alloc_ops_per_sec: rpmalloc
+
+### realloc
+
+![realloc](plots/windows/realloc.png)
+
+**Best performer:** total_ops_per_sec: rpmalloc, alloc_ops_per_sec: rpmalloc
+
+### sequential_alloc
+
+![sequential_alloc](plots/windows/sequential_alloc.png)
+
+**Best performer:** total_ops_per_sec: mimalloc, alloc_ops_per_sec: rpmalloc
+
+### stack_ops
+
+![stack_ops](plots/windows/stack_ops.png)
+
+**Best performer:** total_ops_per_sec: rpmalloc, alloc_ops_per_sec: rpmalloc
+
+### threaded_alloc_1
+
+![threaded_alloc_1](plots/windows/threaded_alloc_1.png)
+
+**Best performer:** total_ops_per_sec: mimalloc, alloc_ops_per_sec: mimalloc
+
+### threaded_alloc_16
+
+![threaded_alloc_16](plots/windows/threaded_alloc_16.png)
+
+**Best performer:** total_ops_per_sec: mimalloc, alloc_ops_per_sec: mimalloc
+
+### threaded_alloc_2
+
+![threaded_alloc_2](plots/windows/threaded_alloc_2.png)
+
+**Best performer:** total_ops_per_sec: mimalloc, alloc_ops_per_sec: mimalloc
+
+### threaded_alloc_4
+
+![threaded_alloc_4](plots/windows/threaded_alloc_4.png)
+
+**Best performer:** total_ops_per_sec: mimalloc, alloc_ops_per_sec: mimalloc
+
+### threaded_alloc_8
+
+![threaded_alloc_8](plots/windows/threaded_alloc_8.png)
+
+**Best performer:** total_ops_per_sec: system, alloc_ops_per_sec: system
+
+### vector_ops
+
+![vector_ops](plots/windows/vector_ops.png)
+
+**Best performer:** total_ops_per_sec: system, alloc_ops_per_sec: rpmalloc
+
+### worst_case_frag
+
+![worst_case_frag](plots/windows/worst_case_frag.png)
+
+**Best performer:** total_ops_per_sec: mimalloc, alloc_ops_per_sec: system
+
 </details>
 
 <details>
