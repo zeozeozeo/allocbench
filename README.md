@@ -1,6 +1,6 @@
 # allocbench
 
-Benchmarks of various memory allocation libraries: [mimalloc](https://github.com/microsoft/mimalloc), [rpmalloc](https://github.com/mjansson/rpmalloc), [jemalloc](https://github.com/jemalloc/jemalloc) (not on Windows currently), [tcmalloc](https://github.com/google/tcmalloc) (not supported on Windows)
+Benchmarks of various memory allocation libraries: [mimalloc](https://github.com/microsoft/mimalloc), [rpmalloc](https://github.com/mjansson/rpmalloc), [jemalloc](https://github.com/jemalloc/jemalloc) (not on Windows currently)
 
 ## Results
 
